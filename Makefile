@@ -1,32 +1,22 @@
 CXX = g++
-CXXFLAGS = -std=c++11 -Wall
+CXXFLAGS = -std=c++11 -Wall -Iinclude
 
-# Directories
-SRC_DIR = src
-INCLUDE_DIR = include
-BUILD_DIR = build
-BIN_DIR = bin
+# List your source files
+SRC = src/main.cpp src/trimmer.cpp
 
-# Files
-SOURCES = $(wildcard $(SRC_DIR)/*.cpp)
-OBJECTS = $(patsubst $(SRC_DIR)/%.cpp, $(BUILD_DIR)/%.o, $(SOURCES))
-EXECUTABLE = $(BIN_DIR)/trimmer
+# Specify the object files
+OBJ = $(patsubst src/%.cpp, build/%.o, $(SRC))
 
-.PHONY: all clean
+# Specify the target executable
+TARGET = FASTATrimmer
 
-all: $(BUILD_DIR) $(BIN_DIR) $(EXECUTABLE)
+all: $(TARGET)
 
-$(BUILD_DIR):
-	mkdir -p $(BUILD_DIR)
+$(TARGET): $(OBJ)
+    $(CXX) $(CXXFLAGS) $^ -o $@
 
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
-
-$(BUILD_DIR)/%.o: $(SRC_DIR)/%.cpp
-	$(CXX) $(CXXFLAGS) -I$(INCLUDE_DIR) -c $< -o $@
-
-$(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $(EXECUTABLE) $(OBJECTS)
+build/%.o: src/%.cpp
+    $(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -rf $(BUILD_DIR) $(BIN_DIR)
+    rm -f $(OBJ) $(TARGET)

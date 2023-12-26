@@ -1,21 +1,21 @@
 cmake_minimum_required(VERSION 3.10)
+project(FASTATrimmer)
 
-project(trimmer)
+# Set C++ standard and compilation flags
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
-# Set C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+# Specify the source files
+set(SOURCE_FILES
+    src/main.cpp
+    src/trimmer.cpp
+)
 
-# Find required packages (if any)
-
-# Add include directory
+# Specify the include directories
 include_directories(include)
 
-# Add source files
-file(GLOB SOURCES "src/*.cpp")
-
-# Set output directory for the executable
-set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
-
-# Create executable
-add_executable(trimmer ${SOURCES})
+# Create the executable and link against filesystem library
+add_executable(FASTATrimmer ${SOURCE_FILES})
+target_link_libraries(FASTATrimmer stdc++fs)

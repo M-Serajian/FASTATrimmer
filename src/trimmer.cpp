@@ -1,6 +1,6 @@
 // trimmer.cpp
 
-#include "trimmer.h"
+#include "trimmer/trimmer.h"
 
 void process_arguments(int argc, char* argv[], std::string& input, std::string& output) {
 
