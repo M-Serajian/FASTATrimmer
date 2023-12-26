@@ -1,21 +1,25 @@
+# CMakeLists.txt
+
 cmake_minimum_required(VERSION 3.10)
 project(FASTATrimmer)
 
-# Set C++ standard and compilation flags
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 
-# Specify the source files
-set(SOURCE_FILES
-    src/main.cpp
-    src/trimmer.cpp
+# Set the paths to include directories
+include_directories(
+    ${CMAKE_SOURCE_DIR}/include/trimmer
+    ${CMAKE_SOURCE_DIR}/include/regex
 )
 
-# Specify the include directories
-include_directories(include)
+# Create a bin directory for the executable
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Create the executable and link against filesystem library
-add_executable(FASTATrimmer ${SOURCE_FILES})
-target_link_libraries(FASTATrimmer stdc++fs)
+# Add executable and specify source files
+add_executable(FASTATrimmer 
+    src/main.cpp 
+    src/trimmer.cpp 
+    src/argument_parser.cpp
+)
+
+# Alternatively, you can use target_include_directories:
+# target_include_directories(FASTATrimmer PRIVATE ${CMAKE_SOURCE_DIR}/include/trimmer ${CMAKE_SOURCE_DIR}/include/regex)
