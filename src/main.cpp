@@ -1,24 +1,28 @@
+// main.cpp
+#include "argument_parser.h"
+#include "trimmer.h"
 #include <iostream>
-#include <filesystem> // Include the filesystem header
-#include "trimmer/trimmer.h"
 
-int main(int argc, char* argv[]) {
-    if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " input_file output_directory" << std::endl;
-        return 1;
+int main(int argc, char *argv[])
+{
+    try
+    {
+        std::string input_file, output_dir;
+        process_arguments(argc, argv, input_file, output_dir);
+
+        // Extract the base name from the input file path
+        size_t last_slash_pos = input_file.find_last_of('/');
+        std::string file_name = (last_slash_pos != std::string::npos) ? input_file.substr(last_slash_pos + 1) : input_file;
+        std::cout << "Input File: " << file_name << std::endl;
+
+        std::string output_file_directory = output_dir + '/' + file_name;
+        std::cout << "Output File Directory: " << output_file_directory << std::endl;
+
+        modify_text_file(input_file, output_file_directory);
     }
-
-    std::string input = argv[1];
-    std::string output = argv[2];
-
-    try {
-        std::string file_name = std::filesystem::path(input).filename();
-        std::cout << file_name << std::endl;
-
-        std::string output_file_directory = (std::filesystem::path(output) / file_name).string();
-        std::cout << output_file_directory << std::endl;
-    } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Error: " << e.what() << std::endl;
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << std::endl;
         return 1;
     }
 

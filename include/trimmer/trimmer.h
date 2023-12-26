@@ -1,32 +1,25 @@
 // trimmer.h
+#pragma once
 
-#ifndef TRIMMER_H
-#define TRIMMER_H
-
+#include <stdexcept>
 #include <string>
 
-class FileNotFoundError : public std::exception {
+class FileNotFoundError : public std::runtime_error
+{
 public:
-    const char* what() const noexcept override {
-        return "File not found.";
-    }
+    FileNotFoundError(const std::string &msg);
 };
 
-class EmptyFileError : public std::exception {
+class EmptyFileError : public std::runtime_error
+{
 public:
-    const char* what() const noexcept override {
-        return "File is empty.";
-    }
+    EmptyFileError(const std::string &msg);
 };
 
-class DirectoryNotFoundError : public std::exception {
+class DirectoryNotFoundError : public std::runtime_error
+{
 public:
-    const char* what() const noexcept override {
-        return "Directory not found.";
-    }
+    DirectoryNotFoundError(const std::string &msg);
 };
 
-void process_arguments(int argc, char* argv[], std::string& input, std::string& output);
-void modify_text_file(const std::string& input_path, const std::string& output_path);
-
-#endif // TRIMMER_H
+void modify_text_file(const std::string &input_path, const std::string &output_path);
