@@ -36,3 +36,6 @@
 
 /bin/*
 !/bin/.keep
+
+/ModifyTextFile_output/*
+!/ModifyTextFile_output/.keep
