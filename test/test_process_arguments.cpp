@@ -76,41 +76,41 @@ TEST_F(TrimmerTest, MissingOutputOption) {
     EXPECT_EQ("Usage: program_name -i <input_directory> -o <output_directory>", exception_message);
 }
 
-// TEST_F(TrimmerTest, ModifyTextFile) {
-//     // Define file paths
-//     const std::string input_file_path = "/absolute/path/to/your/project/data/genomes/1773.1547.fna";
-//     const std::string output_directory = "/absolute/path/to/your/project/data/genomes/ModifyTextFile_output/";
+TEST_F(TrimmerTest, ModifyTextFile) {
+    // Define file paths
+    const std::string input_file_path = "/home/m.serajian/projects/FASTATrimmer/data/genomes/1773.1547.fna";
+    const std::string output_directory = "/home/m.serajian/projects/FASTATrimmer/data/genomes/ModifyTextFile_output/";
+   
+    // Check if the input file exists
+    std::ifstream input_check(input_file_path);
+    ASSERT_TRUE(input_check.is_open()) << "Failed to open input file: " << input_file_path;
+    input_check.close();
 
-//     // Check if the input file exists
-//     std::ifstream input_check(input_file_path);
-//     ASSERT_TRUE(input_check.is_open()) << "Failed to open input file: " << input_file_path;
-//     input_check.close();
+    // Call the modify_text_file function
+    modify_text_file(input_file_path, output_directory);
 
-//     // Call the modify_text_file function
-//     modify_text_file(input_file_path, output_directory);
+    // Verify the output file content
+    std::string output_path = output_directory + "1773.1547.fna";
+    std::ifstream output_file(output_path);
+    std::ifstream correct_file("/home/m.serajian/projects/FASTATrimmer/data/genomes/correct_1773.1547.fna");
 
-//     // Verify the output file content
-//     std::string output_path = output_directory + "1773.1547.fna";
-//     std::ifstream output_file(output_path);
-//     std::ifstream correct_file("/absolute/path/to/your/project/data/genomes/correct_1773.1547.fna");
+    // Check if both files are open
+    ASSERT_TRUE(output_file.is_open()) << "Failed to open output file: " << output_path;
+    ASSERT_TRUE(correct_file.is_open()) << "Failed to open correct file: /absolute/path/to/your/project/data/genomes/correct_1773.1547.fna";
 
-//     // Check if both files are open
-//     ASSERT_TRUE(output_file.is_open()) << "Failed to open output file: " << output_path;
-//     ASSERT_TRUE(correct_file.is_open()) << "Failed to open correct file: /absolute/path/to/your/project/data/genomes/correct_1773.1547.fna";
+    // Read content of both files
+    std::stringstream output_buffer, correct_buffer;
+    output_buffer << output_file.rdbuf();
+    correct_buffer << correct_file.rdbuf();
 
-//     // Read content of both files
-//     std::stringstream output_buffer, correct_buffer;
-//     output_buffer << output_file.rdbuf();
-//     correct_buffer << correct_file.rdbuf();
+    // Compare the content
+    EXPECT_EQ(output_buffer.str(), correct_buffer.str())
+        << "Output content does not match the correct content.";
 
-//     // Compare the content
-//     EXPECT_EQ(output_buffer.str(), correct_buffer.str())
-//         << "Output content does not match the correct content.";
-
-//     // Close the files
-//     output_file.close();
-//     correct_file.close();
-// }
+    // Close the files
+    output_file.close();
+    correct_file.close();
+}
 
 int main(int argc, char** argv) {
     std::cout << ANSI_BLUE << "Running tests for argument_parser.cpp using Google Test..." << ANSI_RESET << std::endl;

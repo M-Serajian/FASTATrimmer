@@ -8,6 +8,7 @@ FileNotFoundError::FileNotFoundError(const std::string &msg) : std::runtime_erro
 EmptyFileError::EmptyFileError(const std::string &msg) : std::runtime_error(msg) {}
 DirectoryNotFoundError::DirectoryNotFoundError(const std::string &msg) : std::runtime_error(msg) {}
 
+
 void modify_text_file(const std::string &input_path, const std::string &output_directory) {
     // Read content from the input file
     std::ifstream input_file(input_path);
@@ -23,9 +24,12 @@ void modify_text_file(const std::string &input_path, const std::string &output_d
     // Find the index of the last alphabetic character
     size_t last_letter_index = content.find_last_of("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
     if (last_letter_index != std::string::npos) {
-        last_letter_index += 1; // Include the last letter in the substring
-        content.erase(last_letter_index);
+        // Erase all characters after the last alphabetic character
+        content.erase(last_letter_index + 1);
     }
+
+    // Add a single empty line at the end
+    content += "\n";
 
     // Create the output directory if it doesn't exist
     std::filesystem::create_directories(output_directory);
