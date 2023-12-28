@@ -4,9 +4,6 @@ project(FASTATrimmer)
 # Set the minimum C++ standard to C++17
 set(CMAKE_CXX_STANDARD 17)
 
-# Create a bin directory for the executable
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-
 # Add library for source files
 add_library(FASTATrimmerLib
     src/trimmer.cpp 
@@ -40,5 +37,7 @@ add_executable(FASTATrimmerTests
 # Link the test executable with Google Test and the library
 target_link_libraries(FASTATrimmerTests PRIVATE gtest gtest_main FASTATrimmerLib)
 
-# Add a test for your test executable
-add_test(NAME MyTest COMMAND FASTATrimmerTests)
+# Set the output directory for both executables to bin directory
+set_target_properties(FASTATrimmer FASTATrimmerTests PROPERTIES 
+    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin
+)

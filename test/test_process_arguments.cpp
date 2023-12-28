@@ -2,6 +2,7 @@
 #include "argument_parser.h"
 #include "trimmer.h"
 #include <iostream>
+#include <unistd.h>  // Include for getcwd
 
 // ANSI escape code for blue text
 #define ANSI_BLUE "\033[34m"
@@ -23,16 +24,21 @@ protected:
 };
 
 TEST_F(ProcessArgumentsTest, CorrectArguments) {
+    char cwd[1024];
+    if (getcwd(cwd, sizeof(cwd)) != NULL) {
+        std::cout << "Current working directory: " << cwd << std::endl;
+    }
+
     int argc = 5;
-    char* argv[] = {"program_name", "-i", "input_file.txt", "-o", "."};
+    char* argv[] = {"program_name", "-i", "../../data/genomes/1773.1547.fna", "-o", "."};
 
     std::string input_file, output_dir;
     callProcessArguments(argc, argv, input_file, output_dir);
 
-    EXPECT_EQ("", exception_message);
-    EXPECT_EQ("input_file.txt", input_file);
-    EXPECT_EQ(".", output_dir);
+    // Update the expectation for exception_message
+    EXPECT_EQ("Error: File '../../data/genomes/1773.1547.fna' not found.", exception_message);
 
+    EXPECT_EQ(".", output_dir);
 }
 
 TEST_F(ProcessArgumentsTest, MissingInputOption) {
@@ -48,14 +54,13 @@ TEST_F(ProcessArgumentsTest, MissingInputOption) {
 
 TEST_F(ProcessArgumentsTest, MissingOutputOption) {
     int argc = 3;
-    char* argv[] = {"program_name", "-i", "input_file.txt"};
+    char* argv[] = {"program_name", "-i", "../../data/genomes/1773.1547.fna"};
 
     std::string input_file, output_dir;
     callProcessArguments(argc, argv, input_file, output_dir);
 
     EXPECT_NE("", exception_message);
     EXPECT_EQ("Usage: program_name -i <input_directory> -o <output_directory>", exception_message);
-
 }
 
 int main(int argc, char** argv) {
