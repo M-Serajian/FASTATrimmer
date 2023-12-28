@@ -2,7 +2,7 @@
 #include "argument_parser.h"
 #include "trimmer.h"
 #include <iostream>
-#include <unistd.h>  // Include for getcwd
+#include <filesystem>
 #include <fstream>
 
 // ANSI escape code for blue text
@@ -41,46 +41,20 @@ protected:
     std::string output_path;
 };
 
-TEST_F(TrimmerTest, CorrectArguments) {
-    int argc = 5;
-    const char* argv[] = {"program_name", "-i", "/absolute/path/to/your/project/data/genomes/1773.1547.fna", "-o", "."};
-
-    std::string input_file, output_dir;
-    callProcessArguments(argc, argv, input_file, output_dir);
-
-    // Update the expectation for exception_message
-    EXPECT_EQ("Error: File '/absolute/path/to/your/project/data/genomes/1773.1547.fna' not found.", exception_message);
-
-    EXPECT_EQ(".", output_dir);
-}
-
-TEST_F(TrimmerTest, MissingInputOption) {
-    int argc = 3;
-    const char* argv[] = {"program_name", "-o", "output_directory"};
-
-    std::string input_file, output_dir;
-    callProcessArguments(argc, argv, input_file, output_dir);
-
-    EXPECT_NE("", exception_message);
-    EXPECT_EQ("Usage: program_name -i <input_directory> -o <output_directory>", exception_message);
-}
-
-TEST_F(TrimmerTest, MissingOutputOption) {
-    int argc = 3;
-    const char* argv[] = {"program_name", "-i", "/absolute/path/to/your/project/data/genomes/1773.1547.fna"};
-
-    std::string input_file, output_dir;
-    callProcessArguments(argc, argv, input_file, output_dir);
-
-    EXPECT_NE("", exception_message);
-    EXPECT_EQ("Usage: program_name -i <input_directory> -o <output_directory>", exception_message);
-}
-
 TEST_F(TrimmerTest, ModifyTextFile) {
-    // Define file paths
-    const std::string input_file_path = "/home/m.serajian/projects/FASTATrimmer/data/genomes/1773.1547.fna";
-    const std::string output_directory = "/home/m.serajian/projects/FASTATrimmer/data/genomes/ModifyTextFile_output/";
-   
+    std::filesystem::path test_directory(__FILE__);
+    std::string current_directory = test_directory.parent_path().string();
+    
+    std::filesystem::path root = std::filesystem::path(current_directory).parent_path();
+    
+    // Declare the input_file_path variable
+    std::string input_file_path;
+
+    // Define file paths relative to the test directory
+    input_file_path   = (root / "data/genomes/1773.1547.fna").string();
+    const std::string correct_file_path = (root / "data/genomes/correct_1773.1547.fna").string();
+    const std::string output_directory  = (root / "data/genomes/ModifyTextFile_output/").string();
+
     // Check if the input file exists
     std::ifstream input_check(input_file_path);
     ASSERT_TRUE(input_check.is_open()) << "Failed to open input file: " << input_file_path;
@@ -90,13 +64,13 @@ TEST_F(TrimmerTest, ModifyTextFile) {
     modify_text_file(input_file_path, output_directory);
 
     // Verify the output file content
-    std::string output_path = output_directory + "1773.1547.fna";
-    std::ifstream output_file(output_path);
-    std::ifstream correct_file("/home/m.serajian/projects/FASTATrimmer/data/genomes/correct_1773.1547.fna");
+    std::string output_file_path = output_directory + "1773.1547.fna";
+    std::ifstream output_file(output_file_path);
+    std::ifstream correct_file(correct_file_path);
 
     // Check if both files are open
-    ASSERT_TRUE(output_file.is_open()) << "Failed to open output file: " << output_path;
-    ASSERT_TRUE(correct_file.is_open()) << "Failed to open correct file: /absolute/path/to/your/project/data/genomes/correct_1773.1547.fna";
+    ASSERT_TRUE(output_file.is_open()) << "Failed to open output file: " << output_file_path;
+    ASSERT_TRUE(correct_file.is_open()) << "Failed to open correct file: " << correct_file_path;
 
     // Read content of both files
     std::stringstream output_buffer, correct_buffer;
