@@ -15,10 +15,9 @@ int main(int argc, char *argv[])
         std::string file_name = (last_slash_pos != std::string::npos) ? input_file.substr(last_slash_pos + 1) : input_file;
         std::cout << "Input File: " << file_name << std::endl;
 
-        std::string output_file_directory = output_dir + '/' + file_name;
-        std::cout << "Output File Directory: " << output_file_directory << std::endl;
+        std::cout << "Output File Directory: " << output_dir << std::endl;
 
-        modify_text_file(input_file, output_file_directory);
+        modify_text_file(input_file, output_dir);
     }
     catch (const std::exception &e)
     {

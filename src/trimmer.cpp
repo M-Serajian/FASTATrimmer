@@ -31,9 +31,6 @@ void modify_text_file(const std::string &input_path, const std::string &output_d
     // Add a single empty line at the end
     content += "\n";
 
-    // Create the output directory if it doesn't exist
-    std::filesystem::create_directories(output_directory);
-
     // Extract the filename from the input path
     std::filesystem::path input_file_path_obj(input_path);
     std::string output_file_name = input_file_path_obj.filename();
