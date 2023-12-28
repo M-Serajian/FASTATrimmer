@@ -36,7 +36,7 @@ void modify_text_file(const std::string &input_path, const std::string &output_d
     std::string output_file_name = input_file_path_obj.filename();
 
     // Create the output path by concatenating the output directory and the filename
-    std::string output_path = output_directory + output_file_name;
+    std::string output_path = output_directory+ "/" + output_file_name;
 
     // Write modified content to the output file
     std::ofstream output_file(output_path);
